@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deploy
+  labels:
+    name: mysql-deploy
+    app: k8s-training-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-training-app
+  template:
+    metadata:
+      name: mysql
+      labels:
+        name: mysql-pod
+        app: k8s-training-app
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        ports:
+          - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: root
+          - name: MYSQL_DATABASE
+            value: my-database
+          - name: MYSQL_USER
+            value: my-user  
+          - name: MYSQL_PASSWORD
+            value: my-password
