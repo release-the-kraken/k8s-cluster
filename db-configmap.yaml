@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  db-config-map
+data:
+  db-server: db
+  database_name: k8sDb
+  db-user-username: user

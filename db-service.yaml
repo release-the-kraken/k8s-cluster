@@ -4,11 +4,11 @@ metadata:
   name: db
   labels:
     name: mysql-service
-    app: k8s-training-app
+    app: k8s-app
 spec:
   ports:
   - port:  3306
     targetPort: 3306
   selector:
     name: mysql-pod
-    app: k8s-training-app
+    app: k8s-app

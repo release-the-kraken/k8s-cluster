@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: db-pvc
+  labels: k8s-app
+spec: 
+  accessMode: 
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
