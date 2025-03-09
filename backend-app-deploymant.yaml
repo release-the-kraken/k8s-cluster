@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deploymant
+metadata:
+  name: k8s-app-backend
+  labels:
+    app: k8s-app-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: k8s-app-backend
+  template:
+    metadata:
+      labels:
+        app: k8s-app-backend
+    spec:
+      containers:
+        name: k8s-app-backend
+        image: wmichal13/k8s-demo-app-backend
+        imagePullPolicy: IfNotPresent
+        ports:
+          name: http
+          containerPort: 8080
+        resources:
+          limits:
+            cpu: 0.2
+            memory: "300Mi"
+        env:
+          - name: DB_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-map
+                key: db-server
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-map
+                key: database-name
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-map
+                key: db-user-username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-secret-password
+                key: db-user-password
+      imagePullSecrets:
+        - name:  regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-app-backend-service
+  labels:
+    app: k8s-app-backend
+spec:
+  type: LoadBalancer
+  selector: 
+    app: k8s-app-backend
+    ports:
+      - protocol: TCP
+        name: http
+        port: 8080
+        targetPort: 8080
+        nodePort: 30001

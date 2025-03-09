@@ -12,14 +12,16 @@ spec:
   selector:
     name: mysql-pod
     app: k8s-app
+  clusterIP: None
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata: 
   name: db-pvc
-  labels: k8s-app
+  labels: 
+    app: k8s-app
 spec: 
-  accessMode: 
+  accessModes: 
     - ReadWriteOnce
   resources:
     requests:
@@ -37,7 +39,8 @@ spec:
   selector:
     matchLabels:
       app: k8s-app
-  strategy: Recreate
+  strategy: 
+    type: Recreate
   template:
     metadata:
       name: mysql
@@ -48,8 +51,6 @@ spec:
       containers:
       - name: mysql
         image: mysql
-        ports:
-          - containerPort: 3306
         env:
           - name: MYSQL_DATABASE
             valueFrom:
@@ -74,10 +75,13 @@ spec:
         livenessProbe:
           tcpSocket: 
             port: 3306
-      ports:
-        - containerPort: 3306
-          name: db
-      volumeMounts:
+        ports:
+          - containerPort: 3306
+            name: db
+        volumeMounts:
+          - name: db-persistent-storage
+            mountPath: /var/lib/mysql
+      volumes:
         - name: db-persistent-storage
           persistentVolumeClaim:
             claimName: db-pvc
