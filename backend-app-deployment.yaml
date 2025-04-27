@@ -56,7 +56,7 @@ metadata:
   labels:
     app: k8s-app-backend
 spec:
-  type: LoadBalancer
+  type: ClusterIp
   selector: 
     app: k8s-app-backend
   ports:
@@ -64,4 +64,3 @@ spec:
       name: http
       port: 8080
       targetPort: 8080
-      nodePort: 30001
